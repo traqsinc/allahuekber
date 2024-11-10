@@ -1,0 +1,54 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox
+from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtCore import Qt
+
+class ValidApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("ZeusX - Menu")
+        self.setFixedSize(400, 200)
+
+        # Pencereyi çerçevesiz yapmak
+        self.setWindowFlags(Qt.FramelessWindowHint)
+
+        # Özel fontları yükle
+        self.default_font = self.load_custom_font("kurdinetfont.ttf")  # Diğer yazılar için özel font
+
+        self.initUI()
+        
+    def load_custom_font(self, font_path):
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id == -1:
+            print(f"{font_path} fontu yüklenemedi.")
+            return QFont()  # Varsayılan fonta dön
+        else:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            return QFont(font_family)  # Yüklenen fontu döndür
+        
+    def initUI(self):
+        # Ana layout
+        main_layout = QVBoxLayout(self)
+        
+        # Başlık
+        title_label = QLabel("ZeusX Menu")
+        title_label.setFont(QFont(self.default_font.family(), 16, QFont.Bold))
+        title_label.setStyleSheet("color: white;")
+        main_layout.addWidget(title_label)
+
+        # Start Game Butonu
+        start_game_button = QPushButton("Start Game")
+        start_game_button.setFont(QFont(self.default_font.family(), 10, QFont.Bold))
+        start_game_button.setStyleSheet("background-color: #007f00; color: white; padding: 10px; border: none;")
+        start_game_button.clicked.connect(self.start_game)
+        main_layout.addWidget(start_game_button)
+
+    def start_game(self):
+        # Hizmet mevcut değil bildirimi
+        QMessageBox.warning(self, "Service Unavailable", "The service is currently unavailable.")
+
+# Uygulamayı çalıştır
+app = QApplication(sys.argv)
+window = ValidApp()
+window.show()
+sys.exit(app.exec_())
